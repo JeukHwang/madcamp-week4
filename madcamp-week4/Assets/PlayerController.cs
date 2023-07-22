@@ -7,20 +7,15 @@ public class PlayerController : MonoBehaviour
 {
     public Rigidbody rb;
     public float moveSpeed = 5f;
-    public PlayerInputActions playerControls;
-
     Vector2 moveDirection = Vector2.zero;
+
+    public PlayerInputActions playerControls;
     private InputAction move;
     private InputAction fire;
 
     private void Awake()
     {
         playerControls = new PlayerInputActions();
-    }
-
-    void Start()
-    {
-
     }
 
     private void OnEnable()
@@ -46,7 +41,13 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed);
+        rb.velocity = new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.y * moveSpeed);
+        if (!moveDirection.Equals(Vector2.zero))
+        {
+            float angle = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, 90 -angle, 0);
+        }
+
     }
 
     private void Fire(InputAction.CallbackContext context)
