@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ColorText : MonoBehaviour
+public class ColorInputField : MonoBehaviour
 {
     public void OnEndEditValue()
     {

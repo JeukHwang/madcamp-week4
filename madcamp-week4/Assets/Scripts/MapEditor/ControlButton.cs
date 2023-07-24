@@ -3,16 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ControlButton : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
+{   
+    public void OnClickRotate(string direction)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (MapEditor.userSelectedTarget != null)
+        {
+            switch (direction)
+            {
+                case "right":// clockwise
+                    MapEditor.userSelectedTarget.transform.localEulerAngles += new Vector3(0, 90, 0);
+                    break;
+                case "left": // counterclockwise
+                    MapEditor.userSelectedTarget.transform.localEulerAngles -= new Vector3(0, 90, 0);
+                    Debug.Log("l");
+                    break;
+                default:
+                    Debug.Log("h");
+                    break;
+            }
+        }
     }
 }

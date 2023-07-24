@@ -10,10 +10,12 @@ public class ItemPanel : MonoBehaviour
 
     public GameObject createButton;
 
+    public GameObject ColorPanel;
+
     public void OnClickItemButton(GameObject newSelectedItem)
     {
-        // 처음 누른 것이라면, 선택을 적용한다.
-        if (selectedItem != newSelectedItem)
+        // 해당 버튼을 처음 누른 것이라면, 선택을 적용한다.
+        if (selectedItem != newSelectedItem && newSelectedItem != null)
         {
             // 선택한 것의 색상을 강조한다.
             newSelectedItem.GetComponent<Image>().color = new Color(1, 1, 0.8f); // 연한 노랑
@@ -24,13 +26,43 @@ public class ItemPanel : MonoBehaviour
             else createButton.GetComponent<Button>().interactable = true;
 
             selectedItem = newSelectedItem;
+
+            activateColorPanel();
         }
-        else // 다시 누른 것이라면, 선택을 해제하고 create 버튼을 비활성화한다.
+        // 같은 버튼을 다시 눌렀거나, 버튼이 아닌 다른 곳을 클릭했다.
+        // 선택을 해제하고 create 버튼을 비활성화한다.
+        else
         {
             selectedItem.GetComponent<Image>().color = Color.white;
             selectedItem = null;
 
             createButton.GetComponent<Button>().interactable = false;
+
+            ColorPanel.transform.GetChild(1).gameObject.SetActive(false);
+            ColorPanel.transform.GetChild(2).gameObject.SetActive(false);
+        }
+    }
+
+    // 선택한 것으로 ColorPanel을 활성화한다.
+    private void activateColorPanel()
+    {
+        switch (selectedItem.name)
+        {
+            // Slider을 활성화하고, Toggle을 비활성화한다.
+            case "ButtonExit":
+            case "ButtonWall":
+                ColorPanel.transform.GetChild(1).gameObject.SetActive(true);
+                ColorPanel.transform.GetChild(2).gameObject.SetActive(false);
+                break;
+
+            // Slider을 비활성화하고, Toggle을 활성화한다.
+            case "ButtonPlayer":
+            case "ButtonLight":
+            case "ButtonSwitch":
+            case "ButtonDoor":
+                ColorPanel.transform.GetChild(1).gameObject.SetActive(false);
+                ColorPanel.transform.GetChild(2).gameObject.SetActive(true);
+                break;
         }
     }
 }

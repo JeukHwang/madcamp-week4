@@ -14535,7 +14535,7 @@ GameObject:
   - component: {fileID: 841919655210043566}
   m_Layer: 0
   m_Name: TorchSwitch
-  m_TagString: Untagged
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
