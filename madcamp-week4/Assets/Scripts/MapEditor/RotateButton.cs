@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
+using UnityEngine.InputSystem;
 
-public class ControlButton : MonoBehaviour
+public class RotateButton : MonoBehaviour
 {   
     public void OnClickRotate(string direction)
     {
@@ -13,12 +15,12 @@ public class ControlButton : MonoBehaviour
                 case "right":// clockwise
                     MapEditor.userSelectedTarget.transform.localEulerAngles += new Vector3(0, 90, 0);
                     break;
+
                 case "left": // counterclockwise
                     MapEditor.userSelectedTarget.transform.localEulerAngles -= new Vector3(0, 90, 0);
-                    Debug.Log("l");
                     break;
+
                 default:
-                    Debug.Log("h");
                     break;
             }
         }

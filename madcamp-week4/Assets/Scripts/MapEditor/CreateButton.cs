@@ -5,76 +5,22 @@ using UnityEngine.UI;
 
 public class CreateButton : MonoBehaviour
 {
-    public GameObject PlayerFactory;
-    public GameObject LightFactory;
-    public GameObject SwitchFactory;
-    public GameObject DoorFactory;
-    public GameObject ExitFactory;
-    public GameObject WallFactory;
-    public GameObject Factory6;
-    public GameObject Factory7;
-
-    public GameObject ColorImage; // 사용자가 설정한 색상
-
+    public static bool isPressed = false; // 현재 버튼이 눌러져 있는 상태인지를 가리킨다.
+    public GameObject deleteButton;
 
     public void OnClickCreateButton()
     {
-        GameObject createdObject = null;
-        Debug.Log(ItemPanel.selectedItem);
+        isPressed = !isPressed;
 
-        Color newColor = ColorImage.GetComponent<Image>().color;
+        // 버튼 색을 바꾼다.
+        if (isPressed) gameObject.GetComponent<Image>().color = new Color(1, 0.5f, 0); // 활성화 -> 주황색
+        else gameObject.GetComponent<Image>().color = Color.white; // 비활성화 -> 하얀색
 
-        switch (ItemPanel.selectedItem.transform.name)
+        // 생성 버튼 활성화 시 삭제 버튼을 비활성화한다.
+        if (isPressed && DeleteButton.isPressed)
         {
-            case "ButtonPlayer":
-                createdObject = Instantiate(PlayerFactory, new Vector3(0, 1, 0), Quaternion.identity);
-                createdObject.transform.GetChild(1).GetComponent<Renderer>().material.color = newColor; // Alpha_Surface 색상 변경
-                break;
-
-            case "ButtonLight":
-                createdObject = Instantiate(LightFactory, new Vector3(0, 1, 0), Quaternion.identity);
-                TorchController lightScript = createdObject.GetComponent<TorchController>();
-
-                if (newColor.r == 1) lightScript.red = true;
-                else lightScript.red = false;
-
-                if (newColor.g == 1) lightScript.green = true;
-                else lightScript.green = false;
-
-                if (newColor.b == 1) lightScript.blue = true;
-                else lightScript.blue = false;
-                break;
-
-            case "ButtonSwitch":
-                createdObject = Instantiate(SwitchFactory, new Vector3(0, 1, 0), Quaternion.identity);
-                TorchSwitchController switchScript = createdObject.GetComponent<TorchSwitchController>();
-
-                if (newColor.r == 1) switchScript.red = true;
-                else switchScript.red = false;
-
-                if (newColor.g == 1) switchScript.green = true;
-                else switchScript.green = false;
-
-                if (newColor.b == 1) switchScript.blue = true;
-                else switchScript.blue = false;
-                break;
-
-            case "ButtonDoor":
-                createdObject = Instantiate(DoorFactory, new Vector3(0, 1, 0), Quaternion.identity);
-                createdObject.GetComponent<Renderer>().material.color = newColor;
-                break;
-
-            case "ButtonExit":
-                createdObject = Instantiate(ExitFactory, new Vector3(0, 1, 0), Quaternion.identity);
-                createdObject.GetComponent<Renderer>().material.color = newColor;
-                break;
-
-            case "ButtonWall":
-                createdObject = Instantiate(WallFactory, new Vector3(0, 1, 0), Quaternion.identity);
-                createdObject.GetComponent<Renderer>().material.color = newColor;
-                break;
+            DeleteButton.isPressed = false;
+            deleteButton.GetComponent<Image>().color = Color.white;
         }
-
-       
     }
 }
