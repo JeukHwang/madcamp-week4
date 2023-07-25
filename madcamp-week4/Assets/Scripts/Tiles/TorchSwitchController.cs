@@ -9,8 +9,8 @@ public class TorchSwitchController : MonoBehaviour
     public bool red;
     public bool green;
     public bool blue;
+    public bool isActivated = false;
 
-    public GameObject? targetDoor; // ?? ???????? ???????? ???? ??????.
     public float detectDistance = 10.0f; // ???????? ?????????? ???? ???????? light?? ?????? ?????? ????
 
     Light switchLight;
@@ -21,7 +21,6 @@ public class TorchSwitchController : MonoBehaviour
     ParticleSystem.MainModule sparksPS;
     ParticleSystem.MainModule firePS;
     ParticleSystem.MainModule smokePS;
-    DoorController? door;
 
     float switchPSsize;
     bool isActivateInLastUpdate;
@@ -38,12 +37,13 @@ public class TorchSwitchController : MonoBehaviour
         firePS = fire.GetComponent<ParticleSystem>().main;
         smokePS = smoke.GetComponent<ParticleSystem>().main;
 
-        if (targetDoor)
-        {
-            door = targetDoor.GetComponentInChildren<DoorController>();
-        }
+        applyProperty();
+    }
 
+    public void applyProperty()
+    {
         Color targetColor = new Color(red ? 1.0f : 0.5f, green ? 1.0f : 0.5f, blue ? 1.0f : 0.5f, 0.5f);
+        switchLight.color = targetColor;
         switchPS.startColor = targetColor;
         sparksPS.startColor = targetColor;
         firePS.startColor = targetColor;
@@ -53,12 +53,7 @@ public class TorchSwitchController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Color targetColor = new Color(red ? 1.0f : 0.5f, green ? 1.0f : 0.5f, blue ? 1.0f : 0.5f, 0.5f);
-        switchLight.color = targetColor;
-        switchPS.startColor = targetColor;
-        sparksPS.startColor = targetColor;
-        firePS.startColor = targetColor;
-        smokePS.startColor = targetColor;
+        // applyProperty();
 
         (float redDist, float greenDist, float blueDist) = closestDistanceToLight();
         bool isRedVisible = redDist <= detectDistance;
@@ -71,20 +66,16 @@ public class TorchSwitchController : MonoBehaviour
         firePS.startColor = new ParticleSystem.MinMaxGradient(currentColor);
         smokePS.startColor = new ParticleSystem.MinMaxGradient(currentColor);
 
-        bool isActivate = (isRedVisible == red) && (isGreenVisible == green) && (isBlueVisible == blue);
-        float targetSize = isActivate ? 2.2f : 0.5f;
+        isActivated = (isRedVisible == red) && (isGreenVisible == green) && (isBlueVisible == blue);
+        float targetSize = isActivated ? 2.2f : 0.5f;
         switchPSsize = Mathf.Lerp(switchPSsize, targetSize, 0.1f);
         switchPS.startSize = new ParticleSystem.MinMaxCurve(switchPSsize);
-        if (isActivate != isActivateInLastUpdate)
+        if (isActivated != isActivateInLastUpdate)
         {
-            if (door is not null)
-            {
-                door.shouldOpen = isActivate;
-            }
-            sparks.SetActive(isActivate);
+            sparks.SetActive(isActivated);
             switchPS.startSize = 20f;
         }
-        isActivateInLastUpdate = isActivate;
+        isActivateInLastUpdate = isActivated;
     }
 
     private (float, float, float) closestDistanceToLight()
@@ -101,6 +92,7 @@ public class TorchSwitchController : MonoBehaviour
             Debug.DrawRay(transform.position + new Vector3(0.01f, 0.01f, 0.01f), rayDirection * detectDistance * 2 + new Vector3(0.01f, 0.01f, 0.01f), Color.magenta, 0.1f);
             if (isHitted)
             {
+                Debug.DrawLine(transform.position - new Vector3(0.01f, 0.01f, 0.01f), rayHit.point - new Vector3(0.01f, 0.01f, 0.01f), Color.green, 0.1f);
                 bool isNotBlockedByOtherGameObject = rayHit.collider.gameObject == torch;
                 if (isNotBlockedByOtherGameObject)
                 {

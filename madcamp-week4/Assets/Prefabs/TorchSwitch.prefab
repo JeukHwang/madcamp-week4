@@ -14573,7 +14573,7 @@ MonoBehaviour:
   red: 0
   green: 0
   blue: 0
-  targetDoor: {fileID: 0}
+  isActivated: 0
   detectDistance: 2
 --- !u!198 &198371139109276902
 ParticleSystem:

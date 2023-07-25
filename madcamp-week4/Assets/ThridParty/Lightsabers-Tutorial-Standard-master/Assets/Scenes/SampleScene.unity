@@ -664,6 +664,10 @@ PrefabInstance:
       propertyPath: soundLoop
       value: 
       objectReference: {fileID: 8300000, guid: 0ea2df74b81c1438e86668ef666c364f, type: 3}
+    - target: {fileID: 6030657272158814740, guid: 997351de3d47f3f48818050eeb4f9507, type: 3}
+      propertyPath: weaponActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6030657272559725788, guid: 997351de3d47f3f48818050eeb4f9507, type: 3}
       propertyPath: m_RootOrder
       value: 2

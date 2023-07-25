@@ -15,12 +15,19 @@ public class TorchController : MonoBehaviour
     void Start()
     {
         innerLight = gameObject.GetComponentInChildren<Light>();
+
+        applyProperty();
+    }
+
+    public void applyProperty()
+    {
+        innerLight.gameObject.SetActive(on);
+        innerLight.color = new Color(red ? 1 : 0, green ? 1 : 0, blue ? 1 : 0);
     }
 
     // Update is called once per frame
     void Update()
     {
-        innerLight.gameObject.SetActive(on);
-        innerLight.color = new Color(red ? 1 : 0, green ? 1 : 0, blue ? 1 : 0 );
+
     }
 }
