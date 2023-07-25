@@ -5,23 +5,22 @@ using UnityEngine.UI;
 
 public class DeleteButton : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public static bool isPressed = false; // 현재 버튼이 눌러져 있는 상태인지를 가리킨다.
+    public GameObject createButton;
 
     public void OnClickDeleteButton()
     {
-        Destroy(MapEditor.userSelectedTarget);
-        MapEditor.userSelectedTarget = null;
+        isPressed = !isPressed;
 
-        gameObject.GetComponent<Button>().interactable = false;
+        // 버튼 색을 바꾼다.
+        if (isPressed) gameObject.GetComponent<Image>().color = new Color(1, 0.5f, 0); // 활성화 -> 주황색
+        else gameObject.GetComponent<Image>().color = Color.white; // 비활성화 -> 하얀색
+
+        // 삭제 버튼 활성화 시 생성 버튼을 비활성화한다.
+        if (isPressed && CreateButton.isPressed)
+        {
+            CreateButton.isPressed = false;
+            createButton.GetComponent<Image>().color = Color.white;
+        }
     }
 }
