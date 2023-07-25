@@ -532,7 +532,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &26788226
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1265,7 +1265,6 @@ GameObject:
   - component: {fileID: 109065288}
   - component: {fileID: 109065287}
   - component: {fileID: 109065286}
-  - component: {fileID: 109065285}
   m_Layer: 5
   m_Name: ButtonExit
   m_TagString: Untagged
@@ -1295,19 +1294,6 @@ RectTransform:
   m_AnchoredPosition: {x: 30, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &109065285
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 109065283}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1cb2ebd8f47abb49b622c0e42fad2ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  createButton: {fileID: 0}
 --- !u!114 &109065286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1351,19 +1337,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 109065287}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 109065285}
-        m_TargetAssemblyTypeName: DeleteButton, Assembly-CSharp
-        m_MethodName: OnClickDeleteButton
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &109065287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2432,7 +2406,7 @@ GameObject:
   - component: {fileID: 440432532}
   - component: {fileID: 440432531}
   - component: {fileID: 440432530}
-  - component: {fileID: 440432529}
+  - component: {fileID: 440432533}
   m_Layer: 5
   m_Name: ButtonSave
   m_TagString: Untagged
@@ -2462,19 +2436,6 @@ RectTransform:
   m_AnchoredPosition: {x: -30, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &440432529
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 440432527}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ea77756d5fc1094e8cd64aa4bca7faf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  deleteButton: {fileID: 0}
 --- !u!114 &440432530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2519,9 +2480,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 440432529}
-        m_TargetAssemblyTypeName: CreateButton, Assembly-CSharp
-        m_MethodName: OnClickCreateButton
+      - m_Target: {fileID: 440432533}
+        m_TargetAssemblyTypeName: SaveButton, Assembly-CSharp
+        m_MethodName: OnClickSaveButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2569,6 +2530,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 440432527}
   m_CullTransparentMesh: 1
+--- !u!114 &440432533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 440432527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bf8b3728680aeb40a6aeeeccdb7a841, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &457009842
 GameObject:
   m_ObjectHideFlags: 0

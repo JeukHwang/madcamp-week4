@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CreateButton : MonoBehaviour
 {
-    public static bool isPressed = false; // 현재 버튼이 눌러져 있는 상태인지를 가리킨다.
+    public static bool isPressed = true; // 현재 버튼이 눌러져 있는 상태인지를 가리킨다.
     public GameObject deleteButton;
 
     public void OnClickCreateButton()

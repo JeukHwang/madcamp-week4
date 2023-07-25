@@ -168,6 +168,7 @@ public class MapEditor : MonoBehaviour
                     {
                         case "ButtonPlayer":
                             userCreateObject = Instantiate(PlayerFactory, Vector3.zero, Quaternion.identity);
+                            userCreateObject.transform.GetChild(0).gameObject.SetActive(false); // 카메라 끄기
                             break;
 
                         case "ButtonSword":
@@ -256,6 +257,7 @@ public class MapEditor : MonoBehaviour
             case "ButtonPlayer":
                 userCreateObject = Instantiate(PlayerFactory, mousePos, Quaternion.identity);
                 userCreateObject.transform.GetChild(1).GetComponent<Renderer>().material.color = newColor; // Alpha_Surface 색상 변경
+                userCreateObject.transform.GetChild(0).gameObject.SetActive(false); // 카메라 끄기
                 break;
 
             case "ButtonSword":
@@ -345,7 +347,6 @@ public class MapEditor : MonoBehaviour
                 toggle.SetActive(false);
 
                 targetColor = userSelectedTarget.transform.GetChild(1).GetComponent<Renderer>().material.color;
-                Debug.Log(targetColor);
                 slider.transform.GetChild(0).GetComponent<Slider>().value = targetColor.r * 255;
                 slider.transform.GetChild(1).GetComponent<Slider>().value = targetColor.g * 255;
                 slider.transform.GetChild(2).GetComponent<Slider>().value = targetColor.b * 255;
