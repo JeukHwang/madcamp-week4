@@ -17,11 +17,13 @@ public class WallController : MonoBehaviour
         rend = GetComponent<Renderer>();
         LayerDefault = LayerMask.NameToLayer("Default");
         LayerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
-        updateProperty();
+        applyProperty();
     }
 
-    void updateProperty()
+    public void applyProperty()
     {
+        Color prevColor = rend.material.color;
+
         if (isTransparent)
         {
             rend.sharedMaterial = transparentMaterial;
@@ -32,11 +34,12 @@ public class WallController : MonoBehaviour
             rend.sharedMaterial = opaqueMaterial;
             gameObject.layer = LayerDefault;
         }
+        rend.material.color = prevColor;
     }
 
     // Update is called once per frame
     void Update()
     {
-        updateProperty();
+        // applyProperty();
     }
 }

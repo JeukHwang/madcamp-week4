@@ -15,6 +15,8 @@ public class MapEditor : MonoBehaviour
 
     // 사용자가 맵에서 마우스로 계속 누르고 있는 오브젝트 (이동 기능) (꾹 누르고 있어야 한다)
     GameObject userKeepedTarget = null;
+    int userKeepedTargetPrevIndex; // 드래그 하기 전
+    int userKeepedTargetNewIndex; // 드래그 끝난 후
 
     // 사용자가 item panel에서 마우스로 계속 누르고 있는 오브젝트 (UI의 item 버튼을 가리킨다)
     GameObject userKeepedItemButton = null;
@@ -22,11 +24,11 @@ public class MapEditor : MonoBehaviour
     // 사용자가 item panel에서 마우스로 움직여서 맵에 실제로 생성할 오브젝트 (실제로 생성할 오브젝트를 가리킨다) (factory에서 instantiate한다)
     GameObject userCreateObject = null;
 
+    public GameObject createButton;
     public GameObject deleteButton;
 
     // 마우스 위치 트래킹용
     Ray ray;
-    RaycastHit hit;
 
     // 드래그 앤 드랍으로 create할 때 필요하다.
     public GameObject PlayerFactory;
@@ -35,12 +37,21 @@ public class MapEditor : MonoBehaviour
     public GameObject DoorFactory;
     public GameObject ExitFactory;
     public GameObject WallFactory;
+    public GameObject HighlightSwitchFactory;
 
     // 맵 상의 오브젝트 클릭 시 수정하는 패널
     public GameObject ColorPanel;
     public GameObject RotatePanel;
-
     public GameObject itemPanel;
+    public GameObject SizePanel;
+    public GameObject CreatePanel;
+
+    // 문과 스위치 연결하기
+    public GameObject ConnectSwitchToast;
+    public static bool isSelectingSwitch = false;
+    GameObject selectedDoor;
+    Dictionary<TorchSwitchController, GameObject> highlight; // 선택한 문과 연결되어 있는 스위치들을 강조하기 위한 GameObject
+    Dictionary<GameObject, List<GameObject>> switchToDoor; // 선택한 스위치와 연결되어 있는 문 리스트
 
     // 현재 카메라 위치
     float cameraPosX;
@@ -61,6 +72,10 @@ public class MapEditor : MonoBehaviour
         cameraPosX = Camera.main.transform.position.x;
         cameraPosY = Camera.main.transform.position.y;
         cameraPosZ = Camera.main.transform.position.z;
+
+        isSelectingSwitch = false;
+        highlight = new Dictionary<TorchSwitchController, GameObject>();
+        switchToDoor = new Dictionary<GameObject, List<GameObject>>();
     }
 
     // Update is called once per frame
@@ -76,32 +91,29 @@ public class MapEditor : MonoBehaviour
 
                 // 마우스 클릭한 화면 좌표를 레이캐스트로 변경하여 3D 월드 좌표로 얻기
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
 
                 if (Physics.Raycast(ray, out hit)) // 레이캐스트가 아무 물체에 부딪힌 경우
                 {
                     Debug.Log("부딪힌 3D 월드 좌표: " + hit.point);
+                    int index = CalculateIndex(NormalizePosition(hit.point, ""));
 
                     // (1) 현재 create 모드이고, item 버튼을 선택했다.
-                    if (CreateButton.isPressed && ItemButton.selectedItemButton != null)
+                    // 클릭한 위치에 다른 오브젝트가 없다면, 선택한 item을 생성한다.
+                    if (createButton.GetComponent<CreateButton>().isPressed && ItemButton.selectedItemButton != null && gameObjects[index] == null)
                     {
-                        // 바닥인 경우에는 선택한 item을 생성한다.
-                        if (hit.collider.gameObject.CompareTag("Plane"))
-                        {
-                            Vector3 mousePos = NormalizePosition(hit.point.x, 0, hit.point.z);
-                            Color newColor = ColorPanel.transform.GetChild(0).GetComponent<Image>().color;
+                        Vector3 mousePos = NormalizePosition(hit.point.x, 0, hit.point.z, ItemButton.selectedItemButton.name);
+                        Color newColor = ColorPanel.transform.GetChild(0).GetComponent<Image>().color;
 
-                            // 해당 위치에 다른 오브젝트가 이미 있는지 확인하고, 없으면 생성한다.
-                            CheckClickInstantiate(mousePos, newColor);
-                        }
+                        ClickInstantiate(mousePos, newColor);
                     }
 
-                    // (2) 현재 delete 모드이고, 클릭한 대상이 바닥이 아닌 오브젝트이다.
-                    else if (DeleteButton.isPressed && !hit.collider.gameObject.CompareTag("Plane"))
+                    // (2) 현재 delete 모드이고, 클릭한 위치에 오브젝트가 있다..
+                    else if (deleteButton.GetComponent<DeleteButton>().isPressed && gameObjects[index] != null)
                     {
-                        Destroy(hit.collider.gameObject);
+                        Destroy(gameObjects[index]);
 
                         // 리스트에서 해당 오브젝트를 삭제한다.
-                        int index = CalculateIndex(hit.collider.gameObject.transform.position);
                         gameObjects[index] = null;
                     }
 
@@ -112,7 +124,7 @@ public class MapEditor : MonoBehaviour
                         if (ItemButton.selectedItemButton != null) itemPanel.GetComponent<ItemButton>().OnClickItemButton(null);
 
                         // 만약 클릭한 대상이 바닥인 경우에는 선택 대상을 초기화한다.
-                        if (hit.collider.gameObject.CompareTag("Plane"))
+                        if (gameObjects[index] == null)
                         {
                             userSelectedTarget = null;
 
@@ -120,11 +132,78 @@ public class MapEditor : MonoBehaviour
                             ColorPanel.transform.GetChild(2).gameObject.SetActive(false);
                             RotatePanel.SetActive(false);
                         }
+                        // 현재 문과 연결할 스위치들을 고르는 중이다.
+                        else if (isSelectingSwitch && gameObjects[index].tag == "Switch")
+                        {
+                            GameObject selectedSwitch = gameObjects[index];
+                            TorchSwitchController switchController = selectedSwitch.GetComponent<TorchSwitchController>();
+                            List<TorchSwitchController> switchList = selectedDoor.GetComponent<DoorController>().switchControllers;
+
+                            if (switchList.Contains(switchController)) // 이전에 선택했었던 스위치이다.
+                            {
+                                switchList.Remove(switchController);
+                                GameObject hl = highlight[switchController];
+                                Destroy(hl);
+                                highlight.Remove(switchController);
+
+                                List<GameObject> result;
+                                if (switchToDoor.TryGetValue(selectedSwitch, out result))
+                                {
+                                    result.Remove(selectedDoor);
+                                }
+                                else
+                                {
+                                    Debug.Log("error?");
+                                }
+                            }
+                            else // 이번에 새롭게 선택한 스위치이다.
+                            {
+                                switchList.Add(switchController);
+                                Vector3 switchPos = gameObjects[index].transform.position;
+                                GameObject hl = Instantiate(HighlightSwitchFactory, new Vector3(switchPos.x + 0.7f, switchPos.y, switchPos.z + 0.7f), Quaternion.identity);
+                                highlight.Add(switchController, hl);
+
+                                List<GameObject> result;
+                                if (switchToDoor.TryGetValue(selectedSwitch, out result))
+                                {
+                                    result.Add(selectedDoor);
+                                }
+                                else
+                                {
+                                    List<GameObject> connectedDoor = new List<GameObject> {selectedDoor};
+                                    switchToDoor.Add(selectedSwitch, connectedDoor);
+                                }
+                            }
+                        }
                         else // 그렇지 않은 경우 대상을 선택한다. (수정, 이동, 삭제 등등 활성화)
                         {
-                            userSelectedTarget = hit.collider.gameObject;
-                            userKeepedTarget = hit.collider.gameObject;
-                        } 
+                            userSelectedTarget = gameObjects[index];
+                            userKeepedTarget = gameObjects[index];
+                            userKeepedTargetPrevIndex = index;
+                            userKeepedTargetNewIndex = index;
+
+                            // 문을 클릭한 경우, 연결할 스위치를 선택하는 창을 띄운다.
+                            if (gameObjects[index].tag == "Door")
+                            {
+                                ConnectSwitchToast.SetActive(true);
+                                isSelectingSwitch = true;
+                                selectedDoor = gameObjects[index];
+
+                                // 문과 연결되어 있는 스위치들을 강조해서 나타낸다.
+                                List<TorchSwitchController> switchList = selectedDoor.GetComponent<DoorController>().switchControllers;
+                                foreach (TorchSwitchController switchController in switchList)
+                                {
+                                    if (switchController != null)
+                                    {
+                                        Vector3 switchPos = switchController.gameObject.transform.position;
+                                        GameObject hl = Instantiate(HighlightSwitchFactory, new Vector3(switchPos.x + 0.7f, switchPos.y, switchPos.z + 0.7f), Quaternion.identity);
+                                        highlight.Add(switchController, hl);
+                                    }
+                                }
+                                SizePanel.SetActive(false);
+                                CreatePanel.SetActive(false);
+                            }
+                        }
                     }
                 }
             }
@@ -134,27 +213,27 @@ public class MapEditor : MonoBehaviour
                 // item panel 위에서 클릭한 버튼을 가리킨다.
                 userKeepedItemButton = EventSystem.current.currentSelectedGameObject;
                 if (userKeepedItemButton != null) Debug.Log(userKeepedItemButton.name);
-            } 
+            }
         }
 
-        if (Input.GetMouseButton(0)) 
+        if (Input.GetMouseButton(0))
         {
             // 맵 위에서 대상을 클릭한 다음에 마우스로 계속 누르고 있다.
             if (userKeepedTarget != null)
             {
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
                 if (Physics.Raycast(ray, out hit))
                 {
                     // 움직이는 마우스 위치에 오브젝트가 없으면, 해당 위치로 대상을 이동시킨다.
-                    Vector3 newPos = NormalizePosition(hit.point.x, 0, hit.point.z);
+                    Vector3 newPos = NormalizePosition(hit.point.x, 0, hit.point.z, userKeepedTarget.tag);
                     int newIndex = CalculateIndex(newPos);
                     if (gameObjects[newIndex] == null)
                     {
-                        int prevIndex = CalculateIndex(userKeepedTarget.transform.position);
-                        gameObjects[prevIndex] = null; // 이전 꺼 삭제
-
+                        if (userKeepedTarget.tag == "Door") userKeepedTarget.GetComponent<DoorController>().closedPosition = newPos;
                         userKeepedTarget.transform.position = newPos; // 보이는 것 수정
-                        gameObjects[newIndex] = userKeepedTarget; // 새롭게 저장
+                        userKeepedTargetNewIndex = newIndex;
                     }
                 }
             }
@@ -167,28 +246,28 @@ public class MapEditor : MonoBehaviour
                     switch (userKeepedItemButton.name)
                     {
                         case "ButtonPlayer":
-                            userCreateObject = Instantiate(PlayerFactory, Vector3.zero, Quaternion.identity);
+                            userCreateObject = Instantiate(PlayerFactory, new Vector3(-1, -1, -1), Quaternion.identity);
                             userCreateObject.transform.GetChild(0).gameObject.SetActive(false); // 카메라 끄기
                             break;
 
-                        case "ButtonSword":
-                            userCreateObject = Instantiate(LightFactory, Vector3.zero, Quaternion.identity);
+                        case "ButtonTorch":
+                            userCreateObject = Instantiate(LightFactory, new Vector3(-1, -1, -1), Quaternion.identity);
                             break;
 
                         case "ButtonSwitch":
-                            userCreateObject = Instantiate(SwitchFactory, Vector3.zero, Quaternion.identity);
+                            userCreateObject = Instantiate(SwitchFactory, new Vector3(-1, -1, -1), Quaternion.identity);
                             break;
 
                         case "ButtonDoor":
-                            userCreateObject = Instantiate(DoorFactory, Vector3.zero, Quaternion.identity);
+                            userCreateObject = Instantiate(DoorFactory, new Vector3(-1, -1, -1), Quaternion.identity);
                             break;
 
                         case "ButtonExit":
-                            userCreateObject = Instantiate(ExitFactory, Vector3.zero, Quaternion.identity);
+                            userCreateObject = Instantiate(ExitFactory, new Vector3(-1, -1, -1), Quaternion.identity);
                             break;
 
                         case "ButtonWall":
-                            userCreateObject = Instantiate(WallFactory, Vector3.zero, Quaternion.identity);
+                            userCreateObject = Instantiate(WallFactory, new Vector3(-1, -1, -1), Quaternion.identity);
                             break;
 
                         default: // 회전, create, delete 등 기타 다른 버튼에 대해서는 동작하지 않는다.
@@ -199,22 +278,33 @@ public class MapEditor : MonoBehaviour
                 else if (userCreateObject != null)
                 {
                     ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+
                     if (Physics.Raycast(ray, out hit))
                     {
                         // 움직이는 마우스 위치로 대상을 이동시킨다.
-                        userCreateObject.transform.position = NormalizePosition(hit.point.x, 0, hit.point.z);
+                        int index = CalculateIndex(NormalizePosition(hit.point.x, 0, hit.point.z, userCreateObject.tag));
+                        if (gameObjects[index] == null)
+                        {
+                            if (userCreateObject.tag == "Door") userCreateObject.GetComponent<DoorController>().closedPosition = NormalizePosition(hit.point.x, 0, hit.point.z, "Door");
+                            userCreateObject.transform.position = NormalizePosition(hit.point.x, 0, hit.point.z, userCreateObject.tag);
+                        }
                     }
                 }
-            }            
+            }
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            userKeepedTarget = null; // 꾹 누르고 있었던, 기존에 맵에 있던 오브젝트
-            userKeepedItemButton = null; // 꾹 누르고 있었던, item panel 위의 버튼
+            // 현재 맵 상에서 오브젝트를 꾹 눌러서 이동하고 있다.
+            if (userKeepedTarget != null && userKeepedTargetPrevIndex != userKeepedTargetNewIndex)
+            {
+                gameObjects[userKeepedTargetPrevIndex] = null;
+                gameObjects[userKeepedTargetNewIndex] = userKeepedTarget;
+            }
 
             // 현재 item panel에서 드래그해서 오브젝트를 맵 상에서 생성하려고 한다.
-            if (userCreateObject != null)
+            else if (userCreateObject != null)
             {
                 CheckDragInstantiate();
             }
@@ -224,7 +314,9 @@ public class MapEditor : MonoBehaviour
                 ActivateColorPanel();
                 RotatePanel.SetActive(true);
             }
-            
+            userKeepedTarget = null; // 꾹 누르고 있었던, 기존에 맵에 있던 오브젝트
+            userKeepedItemButton = null; // 꾹 누르고 있었던, item panel 위의 버튼
+
         }
 
         // 마우스 오른쪽 버튼을 누르고 있으면, 화면을 이동할 수 있다.
@@ -245,22 +337,19 @@ public class MapEditor : MonoBehaviour
 
 
     // 오브젝트를 instantiate하기 전에, 해당 위치에 다른 오브젝트가 이미 있는지를 json에서 확인한다.
-    private void CheckClickInstantiate(Vector3 mousePos, Color newColor)
+    private void ClickInstantiate(Vector3 mousePos, Color newColor)
     {
-        int index = CalculateIndex(mousePos);
+        Toggle transparentToggle = ColorPanel.transform.GetChild(1).gameObject.transform.GetChild(4).gameObject.GetComponent<Toggle>();
 
-        // 해당 위치에 다른 오브젝트가 이미 있다면, 생성하지 않는다.
-        if (gameObjects[index] != null) return;
-        
         switch (ItemButton.selectedItemButton.name)
         {
             case "ButtonPlayer":
                 userCreateObject = Instantiate(PlayerFactory, mousePos, Quaternion.identity);
-                userCreateObject.transform.GetChild(1).GetComponent<Renderer>().material.color = newColor; // Alpha_Surface 색상 변경
+                userCreateObject.transform.GetChild(2).GetComponent<Renderer>().material.color = newColor; // Alpha_Surface 색상 변경
                 userCreateObject.transform.GetChild(0).gameObject.SetActive(false); // 카메라 끄기
                 break;
 
-            case "ButtonSword":
+            case "ButtonTorch":
                 userCreateObject = Instantiate(LightFactory, mousePos, Quaternion.identity);
                 TorchController lightScript = userCreateObject.GetComponent<TorchController>();
 
@@ -291,6 +380,9 @@ public class MapEditor : MonoBehaviour
             case "ButtonDoor":
                 userCreateObject = Instantiate(DoorFactory, mousePos, Quaternion.identity);
                 userCreateObject.GetComponent<Renderer>().material.color = newColor;
+                userCreateObject.GetComponent<DoorController>().closedPosition = mousePos;
+                userCreateObject.GetComponent<DoorController>().isTransparent = transparentToggle.isOn;
+                userCreateObject.GetComponent<DoorController>().applyProperty();
                 break;
 
             case "ButtonExit":
@@ -301,11 +393,14 @@ public class MapEditor : MonoBehaviour
             case "ButtonWall":
                 userCreateObject = Instantiate(WallFactory, mousePos, Quaternion.identity);
                 userCreateObject.GetComponent<Renderer>().material.color = newColor;
+                userCreateObject.GetComponent<WallController>().isTransparent = transparentToggle.isOn;
+                userCreateObject.GetComponent<WallController>().applyProperty();
                 break;
 
             default: // 회전, create, delete 등 기타 다른 버튼에 대해서는 동작하지 않는다.
                 break;
         }
+        int index = CalculateIndex(mousePos);
         gameObjects[index] = userCreateObject;
         userCreateObject = null;
     }
@@ -330,6 +425,24 @@ public class MapEditor : MonoBehaviour
         return (int)(pos.x + mapWidth * pos.z) / 2;
     }
 
+    // Door을 클릭했을 때, 어떤 스위치들을 연결할 것인지를 나타낸다.
+
+
+    // ConnectSwitchToast에서 Done 버튼을 누르면, 패널을 닫는다.
+    public void OnClickDoneButton()
+    {
+        ConnectSwitchToast.SetActive(false);
+        isSelectingSwitch = false;
+        selectedDoor = null;
+        foreach(GameObject hl in highlight.Values) 
+        {
+            if (hl != null) Destroy(hl);
+        }
+        highlight.Clear();
+
+        SizePanel.SetActive(true);
+        CreatePanel.SetActive(true);
+    }
 
 
     // Color panel을 활성화하고, 선택한 오브젝트의 색깔을 불러온다.
@@ -337,6 +450,7 @@ public class MapEditor : MonoBehaviour
     {
         GameObject slider = ColorPanel.transform.GetChild(1).gameObject;
         GameObject toggle = ColorPanel.transform.GetChild(2).gameObject;
+        GameObject transparent = slider.transform.GetChild(4).gameObject;
         Color targetColor;
 
         switch (userSelectedTarget.tag)
@@ -345,8 +459,9 @@ public class MapEditor : MonoBehaviour
             case "Player":
                 slider.SetActive(true);
                 toggle.SetActive(false);
+                transparent.SetActive(false);
 
-                targetColor = userSelectedTarget.transform.GetChild(1).GetComponent<Renderer>().material.color;
+                targetColor = userSelectedTarget.transform.GetChild(2).GetComponent<Renderer>().material.color;
                 slider.transform.GetChild(0).GetComponent<Slider>().value = targetColor.r * 255;
                 slider.transform.GetChild(1).GetComponent<Slider>().value = targetColor.g * 255;
                 slider.transform.GetChild(2).GetComponent<Slider>().value = targetColor.b * 255;
@@ -354,11 +469,25 @@ public class MapEditor : MonoBehaviour
                 break;
 
             case "Door":
+                slider.SetActive(true);
+                toggle.SetActive(false);
+                transparent.SetActive(true);
+
+                transparent.GetComponent<Toggle>().isOn = userSelectedTarget.GetComponent<DoorController>().isTransparent;
+                targetColor = userSelectedTarget.GetComponent<Renderer>().material.color;
+                slider.transform.GetChild(0).GetComponent<Slider>().value = targetColor.r * 255;
+                slider.transform.GetChild(1).GetComponent<Slider>().value = targetColor.g * 255;
+                slider.transform.GetChild(2).GetComponent<Slider>().value = targetColor.b * 255;
+                slider.transform.GetChild(3).GetComponent<Slider>().value = targetColor.a * 255;
+                break;
+
             case "Exit":
             case "Wall":
                 slider.SetActive(true);
                 toggle.SetActive(false);
+                transparent.SetActive(true);
 
+                transparent.GetComponent<Toggle>().isOn = userSelectedTarget.GetComponent<WallController>().isTransparent;
                 targetColor = userSelectedTarget.GetComponent<Renderer>().material.color;
                 slider.transform.GetChild(0).GetComponent<Slider>().value = targetColor.r * 255;
                 slider.transform.GetChild(1).GetComponent<Slider>().value = targetColor.g * 255;
@@ -367,9 +496,10 @@ public class MapEditor : MonoBehaviour
                 break;
 
             // Slider을 비활성화하고, Toggle을 활성화한다.
-            case "Sword":
+            case "Torch":
                 slider.SetActive(false);
                 toggle.SetActive(true);
+                transparent.SetActive(false);
 
                 TorchController torchScript = userSelectedTarget.GetComponent<TorchController>();
                 toggle.transform.GetChild(0).GetComponent<Toggle>().isOn = torchScript.red;
@@ -380,6 +510,7 @@ public class MapEditor : MonoBehaviour
             case "Switch":
                 slider.SetActive(false);
                 toggle.SetActive(true);
+                transparent.SetActive(false);
 
                 TorchSwitchController switchScript = userSelectedTarget.GetComponent<TorchSwitchController>();
                 toggle.transform.GetChild(0).GetComponent<Toggle>().isOn = switchScript.red;
@@ -394,12 +525,18 @@ public class MapEditor : MonoBehaviour
     {
         return (1 + (int) Math.Abs(num)) / 2 * 2 * Math.Sign(num);
     }
-    private Vector3 NormalizePosition(float x, float y, float z)
+    private Vector3 NormalizePosition(float x, float y, float z, string type)
     {
-        return new Vector3(NormalizeFloat(x), NormalizeFloat(y), NormalizeFloat(z));
+        float newY = 0f;
+        if (type == "Switch" || type == "Door" || type == "Wall" || type == "ButtonSwitch" || type == "ButtonDoor" || type == "ButtonWall") newY = 1f;
+
+        return new Vector3(NormalizeFloat(x), newY, NormalizeFloat(z));
     }
-    private Vector3 NormalizePosition(Vector3 prevPos)
+    private Vector3 NormalizePosition(Vector3 prevPos, string type)
     {
-        return new Vector3(NormalizeFloat(prevPos.x), NormalizeFloat(prevPos.y), NormalizeFloat(prevPos.z));
+        float newY = 0f;
+        if (type == "Switch" || type == "Door" || type == "Wall" || type == "ButtonSwitch" || type == "ButtonDoor" || type == "ButtonWall") newY = 1f;
+
+        return new Vector3(NormalizeFloat(prevPos.x), newY, NormalizeFloat(prevPos.z));
     }
 }

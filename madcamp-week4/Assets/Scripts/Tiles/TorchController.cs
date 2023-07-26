@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class TorchController : MonoBehaviour
 {
-    public bool red;
-    public bool green;
-    public bool blue;
+    public bool red = true;
+    public bool green = true;
+    public bool blue = true;
     public bool on = true;
 
     Light innerLight;
