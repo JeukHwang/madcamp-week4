@@ -28,18 +28,43 @@ public class ColorToggle : MonoBehaviour
             switch (gameObject.name)
             {
                 case "ToggleRed": // if는 torch를, else는 switch를 가리킨다.
-                    if (MapEditor.userSelectedTarget.tag == "Torch") MapEditor.userSelectedTarget.GetComponent<TorchController>().red = rgbToggle.isOn;
-                    else MapEditor.userSelectedTarget.GetComponent<TorchSwitchController>().red = rgbToggle.isOn;
+                    if (MapEditor.userSelectedTarget.tag == "Torch")
+                    {
+                        // Debug.Log(MapEditor.userSelectedTarget.GetComponent<TorchController>());
+                        MapEditor.userSelectedTarget.GetComponent<TorchController>().red = rgbToggle.isOn;
+                        MapEditor.userSelectedTarget.GetComponent<TorchController>().applyProperty();
+                    }
+                    else
+                    {
+                        MapEditor.userSelectedTarget.GetComponent<TorchSwitchController>().red = rgbToggle.isOn;
+                        MapEditor.userSelectedTarget.GetComponent<TorchSwitchController>().applyProperty();
+                    }
                     break;
 
                 case "ToggleGreen":
-                    if (MapEditor.userSelectedTarget.tag == "Torch") MapEditor.userSelectedTarget.GetComponent<TorchController>().green = rgbToggle.isOn;
-                    else MapEditor.userSelectedTarget.GetComponent<TorchSwitchController>().green = rgbToggle.isOn;
+                    if (MapEditor.userSelectedTarget.tag == "Torch")
+                    {
+                        MapEditor.userSelectedTarget.GetComponent<TorchController>().green = rgbToggle.isOn;
+                        MapEditor.userSelectedTarget.GetComponent<TorchController>().applyProperty();
+                    }
+                    else
+                    {
+                        MapEditor.userSelectedTarget.GetComponent<TorchSwitchController>().green = rgbToggle.isOn;
+                        MapEditor.userSelectedTarget.GetComponent<TorchSwitchController>().applyProperty();
+                    }
                     break;
 
                 case "ToggleBlue":
-                    if (MapEditor.userSelectedTarget.tag == "Torch") MapEditor.userSelectedTarget.GetComponent<TorchController>().blue = rgbToggle.isOn;
-                    else MapEditor.userSelectedTarget.GetComponent<TorchSwitchController>().blue = rgbToggle.isOn;
+                    if (MapEditor.userSelectedTarget.tag == "Torch")
+                    {
+                        MapEditor.userSelectedTarget.GetComponent<TorchController>().blue = rgbToggle.isOn;
+                        MapEditor.userSelectedTarget.GetComponent<TorchController>().applyProperty();
+                    }
+                    else
+                    {
+                        MapEditor.userSelectedTarget.GetComponent<TorchSwitchController>().blue = rgbToggle.isOn;
+                        MapEditor.userSelectedTarget.GetComponent<TorchSwitchController>().applyProperty();
+                    }
                     break;
             }
         }

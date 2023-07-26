@@ -44,18 +44,26 @@ public class ItemButton : MonoBehaviour
         {
             // Slider을 활성화하고, Toggle을 비활성화한다.
             case "ButtonPlayer":
-            case "ButtonDoor":
             case "ButtonExit":
+                ColorPanel.transform.GetChild(1).gameObject.SetActive(true);
+                ColorPanel.transform.GetChild(2).gameObject.SetActive(false);
+                ColorPanel.transform.GetChild(1).GetChild(4).gameObject.SetActive(false);
+                break;
+
+            case "ButtonDoor":
             case "ButtonWall":
                 ColorPanel.transform.GetChild(1).gameObject.SetActive(true);
                 ColorPanel.transform.GetChild(2).gameObject.SetActive(false);
+                ColorPanel.transform.GetChild(1).GetChild(4).gameObject.SetActive(true);
                 break;
 
+
             // Slider을 비활성화하고, Toggle을 활성화한다.
-            case "ButtonSword":
+            case "ButtonTorch":
             case "ButtonSwitch":
                 ColorPanel.transform.GetChild(1).gameObject.SetActive(false);
                 ColorPanel.transform.GetChild(2).gameObject.SetActive(true);
+                ColorPanel.transform.GetChild(1).GetChild(4).gameObject.SetActive(false);
                 break;
         }
     }

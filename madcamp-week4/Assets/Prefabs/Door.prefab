@@ -50,8 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTransparent: 0
-  switchControllers:
-  - {fileID: 0}
+  switchControllers: []
   shouldOpen: 0
   opaqueMaterial: {fileID: 2100000, guid: eda1cab499d144c44ab288a936c2a2e1, type: 2}
   transparentMaterial: {fileID: 2100000, guid: bddde217968a949908bce4331b83cc14, type: 2}

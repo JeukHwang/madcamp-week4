@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class DeleteButton : MonoBehaviour
 {
-    public static bool isPressed = false; // 현재 버튼이 눌러져 있는 상태인지를 가리킨다.
+    public bool isPressed = false; // 현재 버튼이 눌러져 있는 상태인지를 가리킨다.
     public GameObject createButton;
 
     public void OnClickDeleteButton()
@@ -17,9 +17,9 @@ public class DeleteButton : MonoBehaviour
         else gameObject.GetComponent<Image>().color = Color.white; // 비활성화 -> 하얀색
 
         // 삭제 버튼 활성화 시 생성 버튼을 비활성화한다.
-        if (isPressed && CreateButton.isPressed)
+        if (isPressed && createButton.GetComponent<CreateButton>().isPressed)
         {
-            CreateButton.isPressed = false;
+            createButton.GetComponent<CreateButton>().isPressed = false;
             createButton.GetComponent<Image>().color = Color.white;
         }
     }

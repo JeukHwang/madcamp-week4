@@ -19,10 +19,23 @@ public class ColorSlider : MonoBehaviour
         rgbText = transform.GetChild(0).GetComponent<TMP_InputField>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void TransparentToggleChanged(GameObject toggle)
     {
-        
+        if (MapEditor.userSelectedTarget != null)
+        {
+            switch (MapEditor.userSelectedTarget.tag)
+            {
+                case "Door":
+                    MapEditor.userSelectedTarget.GetComponent<DoorController>().isTransparent = toggle.GetComponent<Toggle>().isOn;
+                    MapEditor.userSelectedTarget.GetComponent<DoorController>().applyProperty();
+                    break;
+
+                case "Wall":
+                    MapEditor.userSelectedTarget.GetComponent<WallController>().isTransparent = toggle.GetComponent<Toggle>().isOn;
+                    MapEditor.userSelectedTarget.GetComponent<WallController>().applyProperty();
+                    break;
+            }
+        }
     }
 
     public void OnSliderValueChanged()
@@ -66,7 +79,7 @@ public class ColorSlider : MonoBehaviour
         switch (MapEditor.userSelectedTarget.tag)
         {
             case "Player":
-                targetRenderer = MapEditor.userSelectedTarget.transform.GetChild(1).GetComponent<Renderer>();
+                targetRenderer = MapEditor.userSelectedTarget.transform.GetChild(2).GetComponent<Renderer>();
                 red = targetRenderer.material.color.r;
                 green = targetRenderer.material.color.g;
                 blue = targetRenderer.material.color.b;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -65,7 +66,7 @@ public class SizeInputField : MonoBehaviour
                 break;
         }
 
-        // (2) 맵에 크기가 작아지면서 맵 밖으로 밀려나게 된 오브젝트들을 삭제한다.
+        // (2) 만약 맵의 크기가 줄어든다면, 맵 크기가 작아지면서 맵 밖으로 밀려나게 된 오브젝트들을 삭제한다.
         int prevWidth = MapEditor.mapWidth;
         int prevHeight = MapEditor.mapHeight;
 
@@ -106,5 +107,25 @@ public class SizeInputField : MonoBehaviour
                 break;
         }
 
+        // (3) gameObjects의 순서를 새로운 Length에 맞게 재조정한다.
+        GameObject[] newGameObjects;
+
+        switch (inputFieldName)
+        {
+            case "WidthInputField":
+                newGameObjects = new GameObject[newValue * prevHeight];
+                for (int j = 0; j < prevHeight; j++)
+                {
+                    Array.Copy(MapEditor.gameObjects, prevWidth * j, newGameObjects, newValue * j, newValue);
+                }
+                MapEditor.gameObjects = newGameObjects;
+                break;
+
+            case "HeightInputField":
+                newGameObjects = new GameObject[prevWidth * newValue];
+                Array.Copy(MapEditor.gameObjects, 0, newGameObjects, 0, newGameObjects.Length);
+                MapEditor.gameObjects = newGameObjects;
+                break;
+        }
     }
 }
