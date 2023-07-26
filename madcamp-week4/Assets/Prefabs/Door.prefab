@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 1432656669647835281}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1.999, y: 1.999, z: 0.9995}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 1.999, y: 3.999, z: 0.9995}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7431251709783443194}
   m_Father: {fileID: 0}
@@ -50,8 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTransparent: 0
-  switchControllers:
-  - {fileID: 0}
+  switchControllers: []
   shouldOpen: 0
   opaqueMaterial: {fileID: 2100000, guid: eda1cab499d144c44ab288a936c2a2e1, type: 2}
   transparentMaterial: {fileID: 2100000, guid: bddde217968a949908bce4331b83cc14, type: 2}

@@ -17,9 +17,14 @@ public class AnimationStateController : MonoBehaviour
     private InputAction change;
     private float closeDistance = 2f;
 
+    private PlayerLocalController playerController;
+
     Animator animator;
     bool hasTorch = false;
     TorchController torchController;
+
+    bool ableToChange = true;
+    bool ableToInteract = true;
 
     private void Awake()
     {
@@ -30,7 +35,7 @@ public class AnimationStateController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         torchController = PlayerTorch.GetComponent<TorchController>();
-
+        playerController = GetComponent<PlayerLocalController>();
     }
 
     private void OnEnable()
@@ -78,39 +83,60 @@ public class AnimationStateController : MonoBehaviour
         {
             animator.SetBool("isRunning", false);
         }
-        if (isPicking)
+        if (isPicking && ableToInteract)
         {
             GrabOrUngrabTorchIfPossible();
         }
-        if (isChanging && hasTorch)
+        if (isChanging && hasTorch && ableToChange)
         {
-            // TODO need throttle
-            torchController.on = !torchController.on;
+            ableToChange = false;
+            StartCoroutine(toggleThrottle());
         }
+    }
+
+    IEnumerator toggleThrottle()
+    {
+        Debug.Log("Change! by L");
+        //ableToChange = false;
+        torchController.on = !torchController.on;
+        //Wait 1 second
+        yield return new WaitForSeconds(1.0f);
+        ableToChange = true;
+
+        Debug.Log("AbleToChange" + ableToChange);
+        //Do process stuff
     }
 
     void GrabOrUngrabTorchIfPossible()
     {
         if (hasTorch)
         {
-            animator.SetTrigger("isInteracting");
+            //ableToInteract = false;
+            //playerController.movable = false;
             StartCoroutine(CheckAnimationCompleted("Torch Ungrab", () =>
             {
                 if (hasTorch)
                 {
                     hasTorch = false;
                     animator.ResetTrigger("isInteracting");
+
                     GameObject newTorch = Instantiate(prefab, GameObject.Find("Player").transform.position + new Vector3(0, 0, 0), Quaternion.identity);
                     TorchController newTorchController = newTorch.GetComponent<TorchController>();
+                    newTorch.SetActive(true);
+
                     TorchController torchController = PlayerTorch.GetComponent<TorchController>();
                     newTorchController.red = torchController.red;
                     newTorchController.green = torchController.green;
                     newTorchController.blue = torchController.blue;
                     newTorchController.on = torchController.on;
+                    newTorchController.applyProperty();
+
                     PlayerTorch.SetActive(false);
-                    newTorch.SetActive(true);
+                    //ableToInteract = true;
+                    //playerController.movable = true;
                 }
             }));
+            animator.SetTrigger("isInteracting");
         }
         else
         {
@@ -120,21 +146,34 @@ public class AnimationStateController : MonoBehaviour
                 float distance = Vector3.Distance(transform.position, closestTorch.transform.position);
                 if (distance <= closeDistance)
                 {
-                    animator.SetTrigger("isInteracting");
+                    //ableToInteract = false;
+                    //playerController.movable = false;
                     StartCoroutine(CheckAnimationCompleted("Torch Grab", () =>
-                    {
-                        hasTorch = true;
-                        animator.ResetTrigger("isInteracting");
-                        TorchController newTorchController = PlayerTorch.GetComponent<TorchController>();
-                        TorchController torchController = closestTorch.GetComponent<TorchController>();
-                        newTorchController.red = torchController.red;
-                        newTorchController.green = torchController.green;
-                        newTorchController.blue = torchController.blue;
-                        newTorchController.on = torchController.on;
-                        closestTorch.SetActive(false);
-                        PlayerTorch.SetActive(true);
-                    }
-       ));
+                        {
+                            if (!hasTorch)
+                            {
+                                hasTorch = true;
+                                animator.ResetTrigger("isInteracting");
+
+                                TorchController newTorchController = PlayerTorch.GetComponent<TorchController>();
+                                PlayerTorch.SetActive(true);
+
+                                TorchController torchController = closestTorch.GetComponent<TorchController>();
+                                newTorchController.red = torchController.red;
+                                newTorchController.green = torchController.green;
+                                newTorchController.blue = torchController.blue;
+                                newTorchController.on = torchController.on;
+                                newTorchController.applyProperty();
+
+                                closestTorch.SetActive(false);
+
+                                //Debug.Log("!!!");
+                                //Debug.Log(playerController.movable);
+                                //ableToInteract = true;
+                                //playerController.movable = true;
+                            }
+                        }));
+                    animator.SetTrigger("isInteracting");
                 }
             }
         }

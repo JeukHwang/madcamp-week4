@@ -209,9 +209,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b5aea3768ba64896aa2337da7f1e7d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  red: 0
-  green: 0
-  blue: 0
+  red: 1
+  green: 1
+  blue: 1
   on: 1
 --- !u!54 &4534839188080482110
 Rigidbody:

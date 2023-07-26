@@ -8,6 +8,8 @@ public class PlayerLocalController : MonoBehaviour
     public float moveSpeed = 5f;
     public float rotateSpeed = 5f;
 
+    public bool movable = true;
+
     Vector2 moveDirection = Vector2.zero;
     Rigidbody rb;
 
@@ -48,9 +50,12 @@ public class PlayerLocalController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.velocity = transform.forward * moveDirection.y * moveSpeed;
-        float rotationAngle = moveDirection.x * rotateSpeed * Time.deltaTime;
-        rb.MoveRotation(rb.rotation * Quaternion.Euler(0f, rotationAngle, 0f));
+        if (movable)
+        {
+            rb.velocity = transform.forward * moveDirection.y * moveSpeed;
+            float rotationAngle = moveDirection.x * rotateSpeed * Time.deltaTime;
+            rb.MoveRotation(rb.rotation * Quaternion.Euler(0f, rotationAngle, 0f));
+        }
     }
 
     private void Fire(InputAction.CallbackContext context)

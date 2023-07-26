@@ -57,8 +57,14 @@ public class DoorController : MonoBehaviour
     {
         // applyProperty();
 
-        shouldOpen = switchControllers.TrueForAll(switchController => switchController.isActivated);
-
+        if (switchControllers.ToArray().Length == 0)
+        {
+            shouldOpen = false;
+        }
+        else
+        {
+            shouldOpen = switchControllers.TrueForAll(switchController => switchController.isActivated);
+        }
         float time = Time.deltaTime * (shouldOpen ? 1 : -1);
         current = Math.Max(Math.Min(current + time, timeInSecond), 0);
         transform.position = closedPosition + transform.TransformDirection(openDirection3d).normalized * speed * current;

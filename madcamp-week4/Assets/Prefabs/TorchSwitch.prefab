@@ -14570,11 +14570,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d02912053f41d4afeb57154de6968d88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  red: 0
-  green: 0
-  blue: 0
+  red: 1
+  green: 1
+  blue: 1
   isActivated: 0
-  detectDistance: 2
+  detectDistance: 10
 --- !u!198 &198371139109276902
 ParticleSystem:
   m_ObjectHideFlags: 0
