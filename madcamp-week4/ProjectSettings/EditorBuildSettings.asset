@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Workshop.unity
     guid: 4d1920ffc5ee33d44b64fea0e0dd7943
+  - enabled: 1
+    path: Assets/Scenes/Editor.unity
+    guid: 65d40295fc9ec36438463e591f141922
   m_configObjects: {}
