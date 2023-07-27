@@ -233,7 +233,7 @@ MonoBehaviour:
   LightFactory: {fileID: 3113739128914232225, guid: c21041ec2fde44ea783ec6572be21bae, type: 3}
   SwitchFactory: {fileID: 1692517446758730, guid: 0c1b77d924f5745719a1c34dfa7ae262, type: 3}
   DoorFactory: {fileID: 1432656669647835281, guid: 04c8246de1c4f482895ba5d3f979bcb2, type: 3}
-  ExitFactory: {fileID: 0}
+  ExitFactory: {fileID: 13617713679858813, guid: 6fb5e29a23345b74ea57f08bce5b17ef, type: 3}
   WallFactory: {fileID: 1432656669647835281, guid: b03147414a5d64c2b88ef22f7ff5066c, type: 3}
 --- !u!1 &1667222138
 GameObject:
