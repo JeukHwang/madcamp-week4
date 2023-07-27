@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ExitButton : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class ExitButton : MonoBehaviour
 
     public void OnClickYesButton()
     {
-        Debug.Log("Yes");
+        SceneManager.LoadScene("Lobby");
     }
 
     public void OnClickNoButton()
