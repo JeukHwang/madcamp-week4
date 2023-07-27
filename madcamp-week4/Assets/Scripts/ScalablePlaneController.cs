@@ -17,7 +17,7 @@ public class ScalablePlaneController : MonoBehaviour
     {
         transform.position = new Vector3(width - 1, transform.position.y, height - 1);
         transform.localScale = new Vector3(width / 5f, transform.localScale.y, height / 5f);
-        GetComponent<Renderer>().material.mainTextureScale = new Vector2(height / 8f, height / 8f);
+        GetComponent<Renderer>().material.mainTextureScale = new Vector2(width / 8f, height / 8f);
     }
 
     // Update is called once per frame
