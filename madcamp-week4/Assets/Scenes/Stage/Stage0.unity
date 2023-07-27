@@ -494,11 +494,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b03147414a5d64c2b88ef22f7ff5066c, type: 3}
---- !u!1 &71377332 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4430273335210040242, guid: 85c4952eae37a420d999ece3d7cc7ec0, type: 3}
-  m_PrefabInstance: {fileID: 431962831}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &72902419
 GameObject:
   m_ObjectHideFlags: 0
@@ -2319,18 +2314,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 149716138756206916, guid: 85c4952eae37a420d999ece3d7cc7ec0, type: 3}
-      propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 149716138756206916, guid: 85c4952eae37a420d999ece3d7cc7ec0, type: 3}
-      propertyPath: m_ActionEvents.Array.data[4].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 149716138756206916, guid: 85c4952eae37a420d999ece3d7cc7ec0, type: 3}
-      propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 149716138756206916, guid: 85c4952eae37a420d999ece3d7cc7ec0, type: 3}
       propertyPath: m_ActionEvents.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 718345307}
@@ -2465,10 +2448,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6858585815136696806, guid: 85c4952eae37a420d999ece3d7cc7ec0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 718345307}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85c4952eae37a420d999ece3d7cc7ec0, type: 3}
 --- !u!1001 &453076961
 PrefabInstance:
@@ -3301,11 +3281,10 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6858585815136696806, guid: 85c4952eae37a420d999ece3d7cc7ec0, type: 3}
   m_PrefabInstance: {fileID: 431962831}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &718345307
+--- !u!114 &718345307 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 3133961064617507093, guid: 85c4952eae37a420d999ece3d7cc7ec0, type: 3}
+  m_PrefabInstance: {fileID: 431962831}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 718345306}
   m_Enabled: 1
@@ -3313,13 +3292,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696cf797dbdfe4d2fafa732db35374ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  runSpeed: 8
-  rotateSpeed: 200
-  grabDistance: 2
-  torchPrefab: {fileID: 3113739128914232225, guid: c21041ec2fde44ea783ec6572be21bae, type: 3}
-  playerTorch: {fileID: 71377332}
-  isMovable: 1
 --- !u!1 &737021811
 GameObject:
   m_ObjectHideFlags: 0
