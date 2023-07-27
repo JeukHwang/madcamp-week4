@@ -37,12 +37,12 @@ public class Tutorial : MonoBehaviour
         stageTime = 0;
         totalTime = 0;
         exitTime = 0;
-        stage = 1;
+        stage = 0;
         isExit = false;
 
         infoText = InfoText.GetComponent<TMP_Text>();
 
-        // FadeInCanvas.SetActive(true);
+        FadeInCanvas.SetActive(true);
         FadeOutCanvas.SetActive(false);
     }
 
@@ -60,17 +60,17 @@ public class Tutorial : MonoBehaviour
                 {
                     break;
                 }
-                else if (stageTime < 5)
+                else if (stageTime < 4)
                 {
-                    FadeInCanvas.transform.GetChild(2).transform.position += Vector3.right * 150 * Time.deltaTime;
+                    FadeInCanvas.transform.GetChild(2).transform.position += Vector3.right * 200 * Time.deltaTime;
                 }
-                else if (stageTime < 8)
+                else if (stageTime < 6)
                 {
-                    FadeInCanvas.transform.GetChild(3).transform.position += Vector3.right * 150 * Time.deltaTime;
+                    FadeInCanvas.transform.GetChild(3).transform.position += Vector3.right * 200 * Time.deltaTime;
                 }
-                else if (stageTime < 13)
+                else if (stageTime < 10)
                 {
-                    float opaque = 1 - (stageTime - 8) / 5f;
+                    float opaque = 1 - (stageTime - 6) / 4f;
                     FadeInCanvas.transform.GetChild(0).GetComponent<Image>().color = new Color(0, 0, 0, opaque);
                     FadeInCanvas.transform.GetChild(1).GetComponent<TMP_Text>().alpha = opaque;
                     FadeInCanvas.transform.GetChild(2).gameObject.SetActive(false);
