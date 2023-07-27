@@ -7,7 +7,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    public float moveSpeed = 4f;
+    public float runSpeed = 8f;
     public float rotateSpeed = 5f;
     public float grabDistance = 0.5f;
     public GameObject torchPrefab;
@@ -97,7 +98,8 @@ public class PlayerController : MonoBehaviour
     {
         if (isMovable)
         {
-            rb.velocity = transform.forward * moveDirection.y * moveSpeed;
+            float speed = animator.GetBool("Shift") ? runSpeed : moveSpeed;
+            rb.velocity = transform.forward * moveDirection.y * speed;
             float rotationAngle = moveDirection.x * rotateSpeed * Time.deltaTime;
             rb.MoveRotation(rb.rotation * Quaternion.Euler(0f, rotationAngle, 0f));
         }
