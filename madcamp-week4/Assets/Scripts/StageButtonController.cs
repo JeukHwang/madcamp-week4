@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class LevelButtonController : MonoBehaviour
+public class StageButtonController : MonoBehaviour
 {
+    public string[] stageNames= { "Stage0", "Stage1" };
     public GameObject levelButton;
-    public int levelNumber;
 
     // Start is called before the first frame update
     void Start()
@@ -16,21 +16,18 @@ public class LevelButtonController : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        for (int index = 1; index <= levelNumber; index++)
+        for (int i = 0; i < stageNames.Length; i++)
         {
             GameObject button = Instantiate(levelButton);
             button.transform.parent = transform;
+            button.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
             Text text = button.GetComponentInChildren<Text>();
-            text.text = index.ToString();
+            text.text = (i+1).ToString();
+            int index = i;
             button.GetComponent<Button>().onClick.AddListener(() =>
             {
-                SceneManager.LoadScene("Stage");
+                SceneManager.LoadScene(stageNames[index]);
             });
         }
-    }
-
-    void loadLevel()
-    {
-
     }
 }

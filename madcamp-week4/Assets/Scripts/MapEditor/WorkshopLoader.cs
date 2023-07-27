@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class ImportMap : MonoBehaviour
+public class WorkshopLoader : MonoBehaviour
 {
     public GameObject PlaneFactory;
     public GameObject PlayerFactory;
@@ -15,17 +15,19 @@ public class ImportMap : MonoBehaviour
     public GameObject ExitFactory;
     public GameObject WallFactory;
 
+    private string baseUrl = "https://madcamp-week4-server-production.up.railway.app/";
 
     private void Start()
     {
-        StartCoroutine(loadMap("b8c4d746-faf9-4d45-8363-d7ea4b553416"));
+        string workshopId = PlayerPrefs.GetString("WorkshopId");
+        Debug.Log("Load WorkshopId " + workshopId);
+        StartCoroutine(loadMap(workshopId));
     }
 
     private IEnumerator loadMap(string id)
     {
-        string baseUrl = "https://madcamp-week4-server-production.up.railway.app/";
-        string username = "jeuk";
-        string password = "1234";
+        string username = PlayerPrefs.GetString("username");
+        string password = PlayerPrefs.GetString("password");
         WWWForm form = new WWWForm();
         form.AddField("username", username);
         form.AddField("password", password);

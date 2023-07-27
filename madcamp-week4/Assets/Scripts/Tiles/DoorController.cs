@@ -41,7 +41,6 @@ public class DoorController : MonoBehaviour
     public void applyProperty()
     {
         Color prevColor = rend.material.color;
-
         if (isTransparent)
         {
             rend.sharedMaterial = transparentMaterial;
