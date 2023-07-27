@@ -97,18 +97,21 @@ public class TorchSwitchController : MonoBehaviour
                 if (isNotBlockedByOtherGameObject)
                 {
                     TorchController torchController = torch.GetComponent<TorchController>();
-                    float distance = Vector3.Distance(torch.transform.position, transform.position);
-                    if (torchController.red)
+                    if (torchController.on)
                     {
-                        red = Math.Min(distance, red);
-                    }
-                    if (torchController.green)
-                    {
-                        green = Math.Min(distance, green);
-                    }
-                    if (torchController.blue)
-                    {
-                        blue = Math.Min(distance, blue);
+                        float distance = Vector3.Distance(torch.transform.position, transform.position);
+                        if (torchController.red)
+                        {
+                            red = Math.Min(distance, red);
+                        }
+                        if (torchController.green)
+                        {
+                            green = Math.Min(distance, green);
+                        }
+                        if (torchController.blue)
+                        {
+                            blue = Math.Min(distance, blue);
+                        }
                     }
                 }
             }
