@@ -33,6 +33,7 @@ Let there be light는 빛을 이용한 퍼즐 게임입니다.
 ![스크린샷 2023-07-27 오후 7 53 16](https://github.com/JeukHwang/madcamp-week4/assets/92910273/450b9faa-7051-4257-98bd-3a9cdcf485b1)
 ![스크린샷 2023-07-27 오후 7 54 38](https://github.com/JeukHwang/madcamp-week4/assets/92910273/4b4621dc-eb5a-4bb2-9233-b67ddd8bdf89)
 ![스크린샷 2023-07-27 오후 7 55 06](https://github.com/JeukHwang/madcamp-week4/assets/92910273/c7afd862-b49c-4985-95be-ef05bd3cd91d)
+![스크린샷 2023-07-27 오후 7 56 16](https://github.com/JeukHwang/madcamp-week4/assets/92910273/e0688a2e-9ad0-42f8-9028-f58cb0ea5d8f)
 
 ## 프로젝트 소개
 
