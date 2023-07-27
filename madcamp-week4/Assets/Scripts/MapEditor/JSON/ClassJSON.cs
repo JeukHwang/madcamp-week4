@@ -182,7 +182,7 @@ public class ClassJSON : MonoBehaviour
                 case "Wall":
                     go = Instantiate(WallFactory, position, rotation);
                     go.GetComponent<Renderer>().material.color = tile.color;
-                    go.GetComponent<DoorController>().isTransparent = tile.isTransparent;
+                    go.GetComponent<WallController>().isTransparent = tile.isTransparent;
                     break;
             }
             gameObjects[i] = go;
