@@ -4,7 +4,8 @@
 
 > 빛이 있으라. 그러자 퍼즐이 있었다...?
 
-Let there be light는 빛을 이용한 퍼즐 게임입니다.
+- Let there be light는 빛을 이용한 퍼즐 게임입니다.
+- 다운로드: https://drive.google.com/file/d/1uN_qHXr1ueP7FIgHY-C_3vyfqn5CdTkL/view?usp=sharing
 
 ### 사진
 
@@ -20,7 +21,7 @@ Let there be light는 빛을 이용한 퍼즐 게임입니다.
 
 ![스크린샷 2023-07-27 오후 7 46 22](https://github.com/JeukHwang/madcamp-week4/assets/92910273/166c4eff-c273-45a9-9453-225a4d23e2fa)
 
-- Workshop
+- Workshop (유저가 맵 제작 및 공유 가능)
 
 ![스크린샷 2023-07-27 오후 7 46 38](https://github.com/JeukHwang/madcamp-week4/assets/92910273/23a99dc5-fc32-4bbb-9580-4817b2eb63a4)
 
