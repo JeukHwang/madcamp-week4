@@ -24,7 +24,6 @@ public class LoginFadeIn : MonoBehaviour
     private void Update()
     {
         currentTime += Time.deltaTime;
-        print(currentTime);
 
         if (currentTime < 2)
         {

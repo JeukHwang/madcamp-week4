@@ -17,8 +17,8 @@ public class SaveButton : MonoBehaviour
     private IEnumerator saveMap(string json)
     {
         string baseUrl = "https://madcamp-week4-server-production.up.railway.app/";
-        string username = "jeuk";
-        string password = "1234";
+        string username = PlayerPrefs.GetString("username");
+        string password = PlayerPrefs.GetString("password");
         WWWForm form = new WWWForm();
         form.AddField("username", username);
         form.AddField("password", password);
