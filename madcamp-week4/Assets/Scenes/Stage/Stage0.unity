@@ -2420,7 +2420,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6081345871288542044, guid: 85c4952eae37a420d999ece3d7cc7ec0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6081345871288542044, guid: 85c4952eae37a420d999ece3d7cc7ec0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2428,7 +2428,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6081345871288542044, guid: 85c4952eae37a420d999ece3d7cc7ec0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6081345871288542044, guid: 85c4952eae37a420d999ece3d7cc7ec0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3314,6 +3314,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  runSpeed: 8
   rotateSpeed: 200
   grabDistance: 2
   torchPrefab: {fileID: 3113739128914232225, guid: c21041ec2fde44ea783ec6572be21bae, type: 3}
@@ -7815,6 +7816,10 @@ PrefabInstance:
     - target: {fileID: 1432656669647835281, guid: b03147414a5d64c2b88ef22f7ff5066c, type: 3}
       propertyPath: m_Name
       value: Wall (39)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2394403037457964130, guid: b03147414a5d64c2b88ef22f7ff5066c, type: 3}
+      propertyPath: isTransparent
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9118925105097270699, guid: b03147414a5d64c2b88ef22f7ff5066c, type: 3}
       propertyPath: m_RootOrder
