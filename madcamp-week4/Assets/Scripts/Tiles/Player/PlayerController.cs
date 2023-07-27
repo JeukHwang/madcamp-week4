@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float rotateSpeed = 5f;
-    public float grabDistance = 2f;
+    public float grabDistance = 0.5f;
     public GameObject torchPrefab;
     public GameObject playerTorch;
 
@@ -54,8 +54,11 @@ public class PlayerController : MonoBehaviour
             {
                 animator.SetTrigger("Interact");
                 isMovable = false;
-                StartCoroutine(WhenAnimationCompleted("Torch Ungrab", () => { isMovable = true; }));
-                hidePlayerTorch();
+                StartCoroutine(WaitUntilAnimationAtTime("Torch Ungrab", 1, () => { isMovable = true; }));
+                StartCoroutine(WaitUntilAnimationAtTime("Torch Ungrab", 1 - 0.39f, () =>
+                {
+                    hidePlayerTorch();
+                }));
             }
             else
             {
@@ -67,8 +70,11 @@ public class PlayerController : MonoBehaviour
                     {
                         animator.SetTrigger("Interact");
                         isMovable = false;
-                        StartCoroutine(WhenAnimationCompleted("Torch Grab", () => { isMovable = true; }));
-                        showPlayerTorch(closestTorch);
+                        StartCoroutine(WaitUntilAnimationAtTime("Torch Grab", 1, () => { isMovable = true; }));
+                        StartCoroutine(WaitUntilAnimationAtTime("Torch Grab", 0.39f, () =>
+                        {
+                            showPlayerTorch(closestTorch);
+                        }));
                     }
                 }
             }
@@ -113,7 +119,7 @@ public class PlayerController : MonoBehaviour
 
     private void hidePlayerTorch()
     {
-        GameObject newTorch = Instantiate(torchPrefab, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
+        GameObject newTorch = Instantiate(torchPrefab, transform.position + transform.forward * 0.5f, Quaternion.identity);
         TorchController newTorchController = newTorch.GetComponent<TorchController>();
         newTorchController.red = torchController.red;
         newTorchController.green = torchController.green;
@@ -143,11 +149,14 @@ public class PlayerController : MonoBehaviour
         return closest;
     }
 
-    private IEnumerator WhenAnimationCompleted(string CurrentAnim, Action Oncomplete)
+    private IEnumerator WaitUntilAnimationAtTime(string CurrentAnim, float time, Action Oncomplete)
     {
-        while (animator.GetCurrentAnimatorStateInfo(0).IsName(CurrentAnim) && animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        while (!animator.GetCurrentAnimatorStateInfo(0).IsName(CurrentAnim))
         {
-            Debug.Log("PLZ "+animator.GetCurrentAnimatorStateInfo(0).IsName(CurrentAnim));
+            yield return null;
+        }
+        while (animator.GetCurrentAnimatorStateInfo(0).IsName(CurrentAnim) && animator.GetCurrentAnimatorStateInfo(0).normalizedTime < time)
+        {
             yield return null;
         }
         if (Oncomplete != null)
