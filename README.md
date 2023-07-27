@@ -25,6 +25,10 @@
 
 ![스크린샷 2023-07-27 오후 7 46 38](https://github.com/JeukHwang/madcamp-week4/assets/92910273/23a99dc5-fc32-4bbb-9580-4817b2eb63a4)
 
+- 에디터
+
+![image](https://github.com/JeukHwang/madcamp-week4/assets/111746601/792441d2-6178-4ef2-8f4c-0db5d5b130f8)
+
 - Settings
 
 ![스크린샷 2023-07-27 오후 7 46 52](https://github.com/JeukHwang/madcamp-week4/assets/92910273/488759a8-b494-412d-8d7e-951c8a614cca)
