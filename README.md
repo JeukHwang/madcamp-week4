@@ -5,7 +5,7 @@
 > 빛이 있으라. 그러자 퍼즐이 있었다...?
 
 - Let there be light는 빛을 이용한 퍼즐 게임입니다.
-- 다운로드: https://drive.google.com/file/d/1uN_qHXr1ueP7FIgHY-C_3vyfqn5CdTkL/view?usp=sharing
+- 다운로드: [https://drive.google.com/file/d/1bUhO0KNw-_PTy-vgeVvIz93fAo2xpaDp/view?usp=sharing)](https://drive.google.com/file/d/1bUhO0KNw-_PTy-vgeVvIz93fAo2xpaDp/view?usp=sharing)
 
 ### 사진
 
