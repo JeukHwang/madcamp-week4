@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 
 public class ClassJSON : MonoBehaviour
 {
-    public static GameMap MapToJson(GameObject[] gameObjects, int mapWidth, int mapHeight)
+    public static GameMap MapToJson(GameObject[] gameObjects, int mapWidth, int mapHeight, string mapTitle)
     {
         Tile[] tiles = new Tile[gameObjects.Length];
 
@@ -99,6 +99,7 @@ public class ClassJSON : MonoBehaviour
         }
         GameMap gameMap = new()
         {
+            title = mapTitle,
             width = mapWidth,
             height = mapHeight,
             tiles = tiles
@@ -113,7 +114,7 @@ public class ClassJSON : MonoBehaviour
         return switchControllers.ConvertAll<int>(gameObject => objects.FindIndex(switchController => switchController.gameObject)).ToArray();
     }
 
-    public static GameObject[] JsonToMap(
+    public static (GameObject[], string) JsonToMap(
         string json,
         GameObject PlaneFactory,
         GameObject PlayerFactory,
@@ -187,7 +188,7 @@ public class ClassJSON : MonoBehaviour
             }
             gameObjects[i] = go;
         }
-        return gameObjects;
+        return (gameObjects, gameMap.title);
     }
 
     // switch의 index들을 controller로 변환한다.
@@ -208,6 +209,7 @@ public class ClassJSON : MonoBehaviour
 [Serializable]
 public class GameMap
 {
+    public string title;
     public int width;
     public int height;
     public Tile[] tiles;

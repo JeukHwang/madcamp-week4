@@ -14,6 +14,8 @@ public class WorkshopLoader : MonoBehaviour
     public GameObject ExitFactory;
     public GameObject WallFactory;
 
+    public static string MapTitle = "";
+
     private string baseUrl = "https://madcamp-week4-server-production.up.railway.app/";
 
     private void Start()
@@ -52,7 +54,9 @@ public class WorkshopLoader : MonoBehaviour
 
     private GameObject[] loadFromString(string str)
     {
-        GameObject[] gameObjects = ClassJSON.JsonToMap(str, PlaneFactory, PlayerFactory, LightFactory, SwitchFactory, DoorFactory, ExitFactory, WallFactory);
+        (GameObject[], string) map = ClassJSON.JsonToMap(str, PlaneFactory, PlayerFactory, LightFactory, SwitchFactory, DoorFactory, ExitFactory, WallFactory);
+        GameObject[] gameObjects = map.Item1;
+        MapTitle = map.Item2;
         return gameObjects;
     }
 }

@@ -247,6 +247,7 @@ public class MapEditor : MonoBehaviour
                         case "ButtonPlayer":
                             userCreateObject = Instantiate(PlayerFactory, new Vector3(-1, -1, -1), Quaternion.identity);
                             userCreateObject.transform.GetChild(0).gameObject.SetActive(false); // 카메라 끄기
+                            userCreateObject.GetComponent<PlayerController>().enabled = false;
                             break;
 
                         case "ButtonTorch":
@@ -346,6 +347,7 @@ public class MapEditor : MonoBehaviour
                 userCreateObject = Instantiate(PlayerFactory, mousePos, Quaternion.identity);
                 userCreateObject.transform.GetChild(2).GetComponent<Renderer>().material.color = newColor; // Alpha_Surface 색상 변경
                 userCreateObject.transform.GetChild(0).gameObject.SetActive(false); // 카메라 끄기
+                userCreateObject.GetComponent<PlayerController>().enabled = false;
                 break;
 
             case "ButtonTorch":
@@ -386,7 +388,7 @@ public class MapEditor : MonoBehaviour
 
             case "ButtonExit":
                 userCreateObject = Instantiate(ExitFactory, mousePos, Quaternion.identity);
-                userCreateObject.GetComponent<Renderer>().material.color = newColor;
+                // userCreateObject.GetComponent<Renderer>().material.color = newColor;
                 break;
 
             case "ButtonWall":
@@ -461,6 +463,7 @@ public class MapEditor : MonoBehaviour
                 transparent.SetActive(false);
 
                 targetColor = userSelectedTarget.transform.GetChild(2).GetComponent<Renderer>().material.color;
+
                 slider.transform.GetChild(0).GetComponent<Slider>().value = targetColor.r * 255;
                 slider.transform.GetChild(1).GetComponent<Slider>().value = targetColor.g * 255;
                 slider.transform.GetChild(2).GetComponent<Slider>().value = targetColor.b * 255;
@@ -480,7 +483,7 @@ public class MapEditor : MonoBehaviour
                 slider.transform.GetChild(3).GetComponent<Slider>().value = targetColor.a * 255;
                 break;
 
-            case "Exit":
+            // case "Exit":
             case "Wall":
                 slider.SetActive(true);
                 toggle.SetActive(false);

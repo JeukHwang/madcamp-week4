@@ -92,7 +92,7 @@ public class ColorSlider : MonoBehaviour
                 break;
 
             case "Door":
-            case "Exit":
+            // case "Exit":
             case "Wall":
                 targetRenderer = MapEditor.userSelectedTarget.GetComponent<Renderer>();
                 red = targetRenderer.material.color.r;
